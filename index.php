@@ -23,6 +23,10 @@
     <link rel="stylesheet" href="assets/css/normalize.css">
     <link rel="stylesheet" href="assets/css/skeleton.css">
 
+    <!-- JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="assets/script/jquery-3.4.1.js"></script>
+
 
 </head>
 
@@ -38,22 +42,49 @@
             </div>
             <div class="columns converter-text">
                 <input type="hidden" name="action" value="convertTo" />
-                <textarea class="u-full-width" name="Form[inputText]" placeholder="Enter your text to convert" id="inputText" rows="4"></textarea>
+
                 <div class="row">
-                    <div class="six columns">
-                        <label for="Currency">Currency</label>
-                        <select class="u-full-width" id="Currency" name="Form[Currency]">
-                            <option value="Option 1">Questions</option>
-                            <option value="Option 2">Admiration</option>
-                            <option value="Option 3">Can I get your number?</option>
-                        </select>
+                    <div class="12-columns">
+                        <textarea class="u-full-width" name="Form[inputText]" placeholder="Enter your text to convert" id="inputText" rows="4"></textarea>
                     </div>
                     <div class="six columns">
-                        <a class="button button-primary" href="#">Convert</a>
+                        <label for="Currency">Currency</label>
+                        <select class="u-full-width" id="Currency" name="Form[Currency]"></select>
+                    </div>
+                    <div class="six columns">
+                        <a id="convertBTN" class="button button-primary" href="#">Convert</a>
                     </div>
                 </div>
             </div>
+            <script>
+                $(document).ready(function() {
 
+                    $("#convertBTN").click(function(e) {
+                        e.preventDefault();
+
+                        if ($("#inputText").val() === "") {
+                            alert("You need to add a some text!");
+                            return false;
+                        }
+
+                        $.post("./assets/inc/actions.php", $('.converter-text').find("input,select,textarea").serializeArray(), function(data) {
+                            console.log("Data Loaded: " + data);
+                        });
+
+                    });
+                    // get options
+                    $.post("./assets/inc/actions.php", {
+                        action: "getCurrencies"
+                    }, function(data) {
+                        //onsole.log("Data Loaded: " + data);
+                        $.each(data, function(key, obj) {
+                            //console.log(key + ": " + obj.currency + " val:" + obj.value);
+                            $("#Currency").append(`<option value="` + obj.value + `">` + obj.currency + `</option>`);
+                        });
+                    });
+
+                });
+            </script>
 
         </div>
     </div>
