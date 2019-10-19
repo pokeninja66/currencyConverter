@@ -22,24 +22,85 @@ class CurrencyConverter extends stdClass
 
         #print_r(self::$feedObj);
 
+        // add BGN
+        $tempObj = new stdClass();
+        $tempObj->currency = "BGN";
+        $tempObj->value = 1;
+        self::$arrObs[] = $tempObj;
+
         // set values
         $html = str_get_html(self::$feedObj->channel->item->description);
-        foreach($html->find('ul') as $ul) {
-            foreach($ul->find('li') as $li){
+        foreach ($html->find('ul') as $ul) {
+            foreach ($ul->find('li') as $li) {
                 #print_r($li);
                 $tempObj = new stdClass();
                 // get only the currency name!
-                preg_match('/[A-Z]+/i', $li->find('em', 0)->plaintext,$matches);
+                preg_match('/[A-Z]+/i', $li->find('em', 0)->plaintext, $matches);
                 //print_r($matches);
-                $tempObj->currency = trim($matches[0]);// $li->find('em', 0)->plaintext;//children('em')->innertext;
-                $tempObj->value =  $li->find('strong', 0)->plaintext;//children('strong')->innertext;
+                $tempObj->currency = trim($matches[0]); // $li->find('em', 0)->plaintext;//children('em')->innertext;
+                $tempObj->value =  $li->find('strong', 0)->plaintext; //children('strong')->innertext;
                 #print_r($tempObj);
                 self::$arrObs[] = $tempObj;
             }
-                #echo $li->innertext . '<br>';
+            #echo $li->innertext . '<br>';
         }
         #print_r(self::$arrObs);
 
         return self::$arrObs;
+    }
+
+    public static function matchAndReplace($arrInfo)
+    {
+
+        $str = trim($arrInfo['inputText']);
+
+        $valuesArr = explode(';', $arrInfo['Currency']);
+
+        $currency = $valuesArr[0];
+        $convertValue = $valuesArr[1];
+
+        switch ($currency) {
+            case "USD":
+
+                preg_match_all("/\\$[^ ]+/", $str, $amount_array);
+                if ($amount_array) {
+                    foreach ($amount_array as $key => $oneVal) {
+                        $converted = ($convertValue * self::convertToNum(str_replace("$", "", $oneVal[$key])));
+                        $str = str_replace($oneVal[$key], "$".self::formatNum($converted), $str);
+                    }
+                }
+
+                preg_match_all("/[^ ]+\\$/", $str, $amount_array);
+                if ($amount_array) {
+                    foreach ($amount_array as  $key => $oneVal) {
+                        $converted = ($convertValue * self::convertToNum(str_replace("$", "", $oneVal[$key])));
+                        $str = str_replace($oneVal[$key], self::formatNum($converted)."$", $str);
+                    }
+                }
+
+                preg_match_all("/([^ ]+ [USD]{3})/i", $str, $amount_array);
+                if ($amount_array) {
+                    foreach ($amount_array as  $key => $oneVal) {
+                        $converted = ($convertValue * self::convertToNum(str_replace("usd", "", mb_strtolower($oneVal[$key]))));
+                        $str = str_replace($oneVal[$key], self::formatNum($converted)." USD", $str);
+                    }
+                }
+
+                break;
+            default: // BGN
+                break;
+        }
+
+        return $str;
+    }
+
+    private static function convertToNum($number)
+    {
+        return (float) str_replace(',', '', $number);
+    }
+
+    private static function formatNum($number, $delimiter = ".")
+    {
+        return number_format((float) $number, 2, $delimiter, '');
     }
 }

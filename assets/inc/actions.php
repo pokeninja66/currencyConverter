@@ -9,6 +9,7 @@ if (!isset($_REQUEST['action'])) {
     session_start();
     //
     include "./converter.php";
+    ini_set("display_errors",0);
 }
 
 if ($action == "getCurrencies") {
@@ -26,9 +27,19 @@ if ($action == "getCurrencies") {
 }
 
 if ($action == "convertTo") {
-    print_r($_REQUEST);
+    #print_r($_REQUEST);
+    #exit();
+    $Form = $_REQUEST['Form'];
+
+    $responceObj = new stdClass;
+    $responceObj->text = Converter\CurrencyConverter::matchAndReplace($Form);
+    echo json_encode($responceObj);
+    exit;
+
+    preg_match_all("/([^ ]+ [{USD}]{3})/i", $Form['inputText'], $amount_array);
+    preg_match_all("/\\$[^ ]+/", $Form['inputText'], $amount_array);
+    print_r($amount_array);
     exit();
-    include_once('./simple_html_dom.php');
 }
 
 

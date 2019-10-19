@@ -79,7 +79,7 @@
                         //onsole.log("Data Loaded: " + data);
                         $.each(data, function(key, obj) {
                             //console.log(key + ": " + obj.currency + " val:" + obj.value);
-                            $("#Currency").append(`<option value="` + obj.value + `">` + obj.currency + `</option>`);
+                            $("#Currency").append(`<option value="` + obj.currency + `;` + obj.value + `">` + obj.currency + `</option>`);
                         });
                     });
 
