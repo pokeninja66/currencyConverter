@@ -1,42 +1,65 @@
-<?php
-/*
-include_once('./simple_html_dom.php');
-echo '<pre>';
-$html = new simple_html_dom();
-$url = 'http://www.unicreditbulbank.bg/en/rates-indexes/currency-rates/';
-$url = str_replace(" ", "%20", $url);
-// get DOM from URL or file
-$html->load_file($url);
-#print_r($html);
-// find all link
+<!DOCTYPE html>
+<html lang="en">
 
-print_r($html->find('.table--exchange'));
-*/
-$feed = 'http://www.bnb.bg/PressOffice/PORSS/index.htm?getRSS=1&lang=BG&cat=1';
-$feed_Obj = simplexml_load_file($feed ,"SimpleXMLElement", LIBXML_NOCDATA);
+<head>
 
-  
-#print_r($feed_Obj->channel->item);
-echo '<pre>';
+    <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Currency Converter</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-$arr = [];
-include_once('./simple_html_dom.php');
-$html = str_get_html($feed_Obj->channel->item->description);
-foreach($html->find('ul') as $ul) {
-    foreach($ul->find('li') as $li){
-        #print_r($li);
-        $tempObj = new stdClass();
-        preg_match('/[A-Z]+/i', $li->find('em', 0)->plaintext,$matches);
-        //print_r($matches);
-        $tempObj->currency = trim($matches[0]);// $li->find('em', 0)->plaintext;//children('em')->innertext;
-        $tempObj->value =  $li->find('strong', 0)->plaintext;//children('strong')->innertext;
-        #print_r($tempObj);
-        $arr[$matches[0]] = $tempObj;
-    }
-        #echo $li->innertext . '<br>';
-}
-print_r($arr);
+    <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-$str = 'In My Cart : 11,12 items';
-preg_match_all('!\d+!', $str, $matches);
-print_r($matches);
+    <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/css/skeleton.css">
+
+
+</head>
+
+<body>
+
+    <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <h4>Hello there</h4>
+                <p>@TODO add example here...</p>
+            </div>
+            <div class="columns converter-text">
+                <input type="hidden" name="action" value="convertTo" />
+                <textarea class="u-full-width" name="Form[inputText]" placeholder="Enter your text to convert" id="inputText" rows="4"></textarea>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="Currency">Currency</label>
+                        <select class="u-full-width" id="Currency" name="Form[Currency]">
+                            <option value="Option 1">Questions</option>
+                            <option value="Option 2">Admiration</option>
+                            <option value="Option 3">Can I get your number?</option>
+                        </select>
+                    </div>
+                    <div class="six columns">
+                        <a class="button button-primary" href="#">Convert</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+
+</html>
