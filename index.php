@@ -38,7 +38,10 @@
         <div class="row">
             <div class="column">
                 <h4>Hello there</h4>
-                <p>@TODO add example here...</p>
+                <p>@TODO add example here...
+
+                11 Apr 2016 10,000.00 USD $15.00 11 May 2016 15.00$
+                </p>
             </div>
             <div class="columns converter-text">
                 <input type="hidden" name="action" value="convertTo" />

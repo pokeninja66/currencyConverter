@@ -10,6 +10,8 @@ class CurrencyConverter extends stdClass
     private static $feed = 'http://www.bnb.bg/PressOffice/PORSS/index.htm?getRSS=1&lang=BG&cat=1';
     private static $feedObj = null;
     public static $arrObs = [];
+    public static $convershionRates = [];
+
 
     public static function getCurrencies()
     {
@@ -27,6 +29,7 @@ class CurrencyConverter extends stdClass
         $tempObj->currency = "BGN";
         $tempObj->value = 1;
         self::$arrObs[] = $tempObj;
+        // add EUR?
 
         // set values
         $html = str_get_html(self::$feedObj->channel->item->description);
@@ -41,6 +44,7 @@ class CurrencyConverter extends stdClass
                 $tempObj->value =  $li->find('strong', 0)->plaintext; //children('strong')->innertext;
                 #print_r($tempObj);
                 self::$arrObs[] = $tempObj;
+                self::$convershionRates[trim($matches[0])] = $tempObj->value;
             }
             #echo $li->innertext . '<br>';
         }
@@ -59,6 +63,45 @@ class CurrencyConverter extends stdClass
         $currency = $valuesArr[0];
         $convertValue = $valuesArr[1];
 
+        //
+        mb_internal_encoding('UTF-8');
+
+        // BGN test
+        if ($currency == "BGN") {
+
+            // convert from USD
+            preg_match_all("/\\$[^ ]+/", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as $key => $oneVal) {
+
+                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key], "UTF-8"), "$");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                    /*
+                    $converted = ($convertValue * self::convertToNum(str_replace("$", "", $oneVal[$key])));
+                    $str = str_replace($oneVal[$key], "$" . self::formatNum($converted), $str);
+                    */
+                }
+            }
+
+            preg_match_all("/[^ ]+\\$/", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as  $key => $oneVal) {
+                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key], "UTF-8"), "$");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                }
+            }
+
+            preg_match_all("/([^ ]+ [USD]{3})/i", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as  $key => $oneVal) {
+                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key], "UTF-8"), "usd");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                }
+            }
+
+            // convert form EUR
+        }
+
         switch ($currency) {
             case "USD":
 
@@ -66,7 +109,7 @@ class CurrencyConverter extends stdClass
                 if ($amount_array) {
                     foreach ($amount_array as $key => $oneVal) {
                         $converted = ($convertValue * self::convertToNum(str_replace("$", "", $oneVal[$key])));
-                        $str = str_replace($oneVal[$key], "$".self::formatNum($converted), $str);
+                        $str = str_replace($oneVal[$key], "$" . self::formatNum($converted), $str);
                     }
                 }
 
@@ -74,7 +117,7 @@ class CurrencyConverter extends stdClass
                 if ($amount_array) {
                     foreach ($amount_array as  $key => $oneVal) {
                         $converted = ($convertValue * self::convertToNum(str_replace("$", "", $oneVal[$key])));
-                        $str = str_replace($oneVal[$key], self::formatNum($converted)."$", $str);
+                        $str = str_replace($oneVal[$key], self::formatNum($converted) . "$", $str);
                     }
                 }
 
@@ -82,7 +125,7 @@ class CurrencyConverter extends stdClass
                 if ($amount_array) {
                     foreach ($amount_array as  $key => $oneVal) {
                         $converted = ($convertValue * self::convertToNum(str_replace("usd", "", mb_strtolower($oneVal[$key]))));
-                        $str = str_replace($oneVal[$key], self::formatNum($converted)." USD", $str);
+                        $str = str_replace($oneVal[$key], self::formatNum($converted) . " USD", $str);
                     }
                 }
 
@@ -102,5 +145,10 @@ class CurrencyConverter extends stdClass
     private static function formatNum($number, $delimiter = ".")
     {
         return number_format((float) $number, 2, $delimiter, '');
+    }
+
+    private static function calcRateToBGN($rate = "", $value, $toReplace = "")
+    {
+        return ($_SESSION["Rates"][$rate] * self::convertToNum(str_replace($toReplace, "", $value)));
     }
 }
