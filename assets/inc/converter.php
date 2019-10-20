@@ -63,18 +63,18 @@ class CurrencyConverter extends stdClass
         $currency = $valuesArr[0];
         $convertValue = $valuesArr[1];
 
-        //
+        // set mb encoding
         mb_internal_encoding('UTF-8');
 
         // BGN test
         if ($currency == "BGN") {
 
-            // convert from USD
+            // convert from USD $
             preg_match_all("/\\$[^ ]+/", $str, $amount_array);
             if ($amount_array) {
                 foreach ($amount_array as $key => $oneVal) {
 
-                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key], "UTF-8"), "$");
+                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key]), "$");
                     $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
                     /*
                     $converted = ($convertValue * self::convertToNum(str_replace("$", "", $oneVal[$key])));
@@ -86,7 +86,7 @@ class CurrencyConverter extends stdClass
             preg_match_all("/[^ ]+\\$/", $str, $amount_array);
             if ($amount_array) {
                 foreach ($amount_array as  $key => $oneVal) {
-                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key], "UTF-8"), "$");
+                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key]), "$");
                     $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
                 }
             }
@@ -94,14 +94,62 @@ class CurrencyConverter extends stdClass
             preg_match_all("/([^ ]+ [USD]{3})/i", $str, $amount_array);
             if ($amount_array) {
                 foreach ($amount_array as  $key => $oneVal) {
-                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key], "UTF-8"), "usd");
+                    $converted = self::calcRateToBGN("USD", mb_strtolower($oneVal[$key]), "usd");
                     $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
                 }
             }
 
             // convert form EUR
-        }
+            // convert from GBP £
+            # da se vidi posle tova
+            preg_match_all("/\\£[^ ]+/", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as $key => $oneVal) {
 
+                    $converted = self::calcRateToBGN("GBP", mb_strtolower($oneVal[$key]), "$");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                    /*
+                    $converted = ($convertValue * self::convertToNum(str_replace("$", "", $oneVal[$key])));
+                    $str = str_replace($oneVal[$key], "$" . self::formatNum($converted), $str);
+                    */
+                }
+            }
+
+            preg_match_all("/[^ ]+\\£/u", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as  $key => $oneVal) {
+                    $converted = self::calcRateToBGN("GBP", mb_strtolower($oneVal[$key]), "$");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                }
+            }
+
+            preg_match_all("/([^ ]+ [GBP]{3})/i", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as  $key => $oneVal) {
+                    $converted = self::calcRateToBGN("GBP", mb_strtolower($oneVal[$key]), "usd");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                }
+            }
+
+            // convert to CHF f
+
+            preg_match_all("/[^ ]+f/u", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as  $key => $oneVal) {
+                    $converted = self::calcRateToBGN("GBP", mb_strtolower($oneVal[$key]), "$");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                }
+            }
+
+            preg_match_all("/([^ ]+ [CHF]{3})/i", $str, $amount_array);
+            if ($amount_array) {
+                foreach ($amount_array as  $key => $oneVal) {
+                    $converted = self::calcRateToBGN("GBP", mb_strtolower($oneVal[$key]), "usd");
+                    $str = str_replace($oneVal[$key], self::formatNum($converted) . " лв.", $str);
+                }
+            }
+        }
+        /*
         switch ($currency) {
             case "USD":
 
@@ -133,7 +181,7 @@ class CurrencyConverter extends stdClass
             default: // BGN
                 break;
         }
-
+        */
         return $str;
     }
 

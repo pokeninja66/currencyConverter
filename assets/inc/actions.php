@@ -9,7 +9,7 @@ if (!isset($_REQUEST['action'])) {
     session_start();
     //
     include "./converter.php";
-    #ini_set("display_errors", 0);
+    ini_set("display_errors", 0);
 }
 
 if ($action == "getCurrencies") {
@@ -32,7 +32,7 @@ if ($action == "convertTo") {
     #exit();
     $Form = $_REQUEST['Form'];
 
-    print_r($_SESSION);
+    #print_r($_SESSION);
 
     $responceObj = new stdClass;
     $responceObj->text = Converter\CurrencyConverter::matchAndReplace($Form);

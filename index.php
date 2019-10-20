@@ -1,3 +1,10 @@
+<?php
+echo "<pre>";
+session_start();
+print_r($_SESSION["Rates"]);
+echo "</pre>";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,9 +45,10 @@
         <div class="row">
             <div class="column">
                 <h4>Hello there</h4>
-                <p>@TODO add example here...
-
-                11 Apr 2016 10,000.00 USD $15.00 11 May 2016 15.00$
+                <p>
+                    Some random example here...<br /> 11 Apr 2016 10,000.00 USD $15.00 11 May 2016 15.00$ and some more random text .... <br />
+                    £10 lets convert some more 20£ and finally 100 GBP .<br />
+                    Ending it whit the swiss 10f and some 13 CHF 20-Oct-19
                 </p>
             </div>
             <div class="columns converter-text">
@@ -58,6 +66,12 @@
                         <a id="convertBTN" class="button button-primary" href="#">Convert</a>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="12-columns">
+                        <textarea class="u-full-width" id="converted" rows="4"></textarea>
+                    </div>
+                </div>
             </div>
             <script>
                 $(document).ready(function() {
@@ -72,6 +86,7 @@
 
                         $.post("./assets/inc/actions.php", $('.converter-text').find("input,select,textarea").serializeArray(), function(data) {
                             console.log("Data Loaded: " + data);
+                            $("#converted").val(data.text);
                         });
 
                     });
