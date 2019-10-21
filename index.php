@@ -1,5 +1,5 @@
 <?php
-echo "<pre>";
+echo "<pre> Rates:";
 session_start();
 print_r($_SESSION["Rates"]);
 echo "</pre>";
@@ -48,7 +48,7 @@ echo "</pre>";
                 <p>
                     Some random example here...<br /> 11 Apr 2016 10,000.00 USD $15.00 11 May 2016 15.00$ and some more random text .... <br />
                     £10 lets convert some more 20£ and finally 100 GBP .<br />
-                    Ending it whit the swiss 10f and some 13 CHF 20-Oct-19
+                    Ending it with  the swiss 10f and some 13 CHF 20-Oct-19
                 </p>
             </div>
             <div class="columns converter-text">

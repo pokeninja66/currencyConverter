@@ -9,7 +9,7 @@ if (!isset($_REQUEST['action'])) {
     session_start();
     //
     include "./converter.php";
-    ini_set("display_errors", 0);
+     #ini_set("display_errors", 0);
 }
 
 if ($action == "getCurrencies") {
