@@ -1,10 +1,3 @@
-<?php
-echo "<pre> Rates:";
-session_start();
-print_r($_SESSION["Rates"]);
-echo "</pre>";
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,11 +37,43 @@ echo "</pre>";
     <div class="container">
         <div class="row">
             <div class="column">
-                <h4>Hello there</h4>
-                <p>
-                    Some random example here...<br /> 11 Apr 2016 10,000.00 USD $15.00 11 May 2016 15.00$ and some more random text <br />
-                    £10 lets convert some more 20£ and finally 100 GBP .<br />
-                    Ending it with  the swiss 10f and some 13 CHF 20-Oct-19
+                <h4>Hello there. This is a currency converter.</h4>
+                <p>Here are the valid formats for conversion:</p>
+                <ul>
+                    <li>
+                        Formats for BGN (лв)
+                        <ul>
+                            <li>10 BGN</li>
+                            <li>10лв</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Formats for USD ($)
+                        <ul>
+                            <li>10 USD</li>
+                            <li>$10</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Formats for GBP (£)
+                        <ul>
+                            <li>10 GBP</li>
+                            <li>£10</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Formats for CHF (Fr)
+                        <ul>
+                            <li>10 CHF</li>
+                            <li>10Fr</li>
+                        </ul>
+                    </li>
+                </ul>
+                <h3>Here is a simple example.</h3>
+                <p style="color:crimson">
+                    This is the start of the text and lets add some $100 dolars to start and 13 USD. <br>
+                    Lets add some dates 20-Oct-19 and some £15 or 20 GBP. Maybe some 10лв and some 23 BGN. <br>
+                    Yeah I know this example is shit but here are some 55 CHF and 87Fr. Maybe some more numbers 131 2 31 3. <br>
                 </p>
             </div>
             <div class="columns converter-text">
@@ -69,8 +94,9 @@ echo "</pre>";
 
                 <div class="row">
                     <div class="12-columns">
-                        <textarea class="u-full-width" id="converted" rows="4"></textarea>
+                        <textarea style="display:none;" class="u-full-width" id="converted" rows="4"></textarea>
                     </div>
+                    <br />
                 </div>
             </div>
             <script>
@@ -78,6 +104,7 @@ echo "</pre>";
 
                     $("#convertBTN").click(function(e) {
                         e.preventDefault();
+
 
                         if ($("#inputText").val() === "") {
                             alert("You need to add a some text!");
@@ -87,6 +114,10 @@ echo "</pre>";
                         $.post("./assets/inc/actions.php", $('.converter-text').find("input,select,textarea").serializeArray(), function(data) {
                             console.log("Data Loaded: " + data);
                             $("#converted").val(data.text);
+
+                            if (!$("#converted").is(":visible")) {
+                                $("#converted").show();
+                            }
                         });
 
                     });

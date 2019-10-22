@@ -116,7 +116,7 @@ class CurrencyConverter extends stdClass
 
     private static function formatNumCHF($number)
     {
-        return  number_format((float) $number, 2, '.', ',') . 'f';
+        return  number_format((float) $number, 2, '.', ',') . 'Fr';
     }
 
     private static function calcRateToBGN($rate = "", $value, $toReplace = "")
@@ -214,11 +214,11 @@ class CurrencyConverter extends stdClass
 
         // convert to CHF f
 
-        preg_match_all("/(?<chf>[^ ]+f)/u", $str, $amount_array);
+        preg_match_all("/(?<chf>[^ ]+Fr)/u", $str, $amount_array);
         if ($amount_array['chf']) {
             #print_r($amount_array);
             foreach ($amount_array['chf'] as $value) {
-                $converted = self::calcRateToBGN("CHF", mb_strtolower($value), "f");
+                $converted = self::calcRateToBGN("CHF", mb_strtolower($value), "Fr");
                 $str = str_replace($value, self::formatNum($converted, ",") . "лв ", $str);
             }
         }
@@ -280,11 +280,11 @@ class CurrencyConverter extends stdClass
 
         // convert form CHF
 
-        preg_match_all("/(?<chf>[^ ]+f)/u", $str, $amount_array);
+        preg_match_all("/(?<chf>[^ ]+Fr)/u", $str, $amount_array);
         if ($amount_array['chf']) {
             foreach ($amount_array['chf'] as $value) {
                 // convert to bgn and then to usd
-                $convertedBGN = (self::convertToNum(str_replace("f", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["CHF"]);
+                $convertedBGN = (self::convertToNum(str_replace("Fr", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["CHF"]);
                 $converted = ($convertedBGN / $_SESSION["Rates"]["USD"]);
                 $str = str_replace($value, self::formatNumUSD($converted), $str);
             }
@@ -350,11 +350,11 @@ class CurrencyConverter extends stdClass
 
         // convert form CHF
 
-        preg_match_all("/(?<chf>[^ ]+f)/u", $str, $amount_array);
+        preg_match_all("/(?<chf>[^ ]+Fr)/u", $str, $amount_array);
         if ($amount_array['chf']) {
             foreach ($amount_array['chf'] as $value) {
                 // convert to bgn and then to usd
-                $convertedBGN = (self::convertToNum(str_replace("f", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["CHF"]);
+                $convertedBGN = (self::convertToNum(str_replace("Fr", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["CHF"]);
                 $converted = ($convertedBGN / $_SESSION["Rates"]["GBP"]);
                 $str = str_replace($value, self::formatNumGBP($converted), $str);
             }
@@ -422,7 +422,7 @@ class CurrencyConverter extends stdClass
         if ($amount_array['gbp']) {
             foreach ($amount_array['gbp'] as $value) {
                 // convert to bgn and then to usd
-                $convertedBGN = (self::convertToNum(str_replace("f", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["GBP"]);
+                $convertedBGN = (self::convertToNum(str_replace("£", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["GBP"]);
                 $converted = ($convertedBGN / $_SESSION["Rates"]["CHF"]);
                 $str = str_replace($value, self::formatNumCHF($converted), $str);
             }
