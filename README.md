@@ -23,4 +23,17 @@ After that the text is scanned  using the **PHP** preg_match() function for text
 preg_match_all("/(?<bgn>[^ ]+лв)/", $str, $amount_array); 
 ```
 
- 
+## Accepted formats for currencies:
+
+* BGN
+ * 100лв
+ * 100 BGN
+* USD ($)
+  * $100
+  * 100 USD
+* GBP (£)
+  * $100
+  * 100 USD
+* CHF (Fr)
+  * 100Fr
+  * 100 CHF
