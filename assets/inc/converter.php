@@ -79,6 +79,10 @@ class CurrencyConverter extends stdClass
             case "GBP":
                 return self::GBPmatch($str);
                 break;
+                // CHF conversion
+            case "CHF":
+                return self::CHFmatch($str);
+                break;
 
             default:
                 return $str;
@@ -104,9 +108,15 @@ class CurrencyConverter extends stdClass
     private static function formatNumGBP($number)
     {
         return '£' . number_format((float) $number, 2, '.', ',');
+        # well this isnt working
         #setlocale(LC_MONETARY, 'en_GB.UTF-8');
         #print_r(self::money_format('%.2n', $number));
         #return self::money_format('%.2n', $number);
+    }
+
+    private static function formatNumCHF($number)
+    {
+        return  number_format((float) $number, 2, '.', ',') . 'f';
     }
 
     private static function calcRateToBGN($rate = "", $value, $toReplace = "")
@@ -322,7 +332,7 @@ class CurrencyConverter extends stdClass
         if ($amount_array['usd']) {
             foreach ($amount_array['usd'] as $value) {
                 // convert to bgn and then to usd
-                $convertedBGN = (self::convertToNum(str_replace("£", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["USD"]);
+                $convertedBGN = (self::convertToNum(str_replace("$", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["USD"]);
                 $converted = ($convertedBGN / $_SESSION["Rates"]["GBP"]);
                 $str = str_replace($value, self::formatNumGBP($converted), $str);
             }
@@ -357,6 +367,74 @@ class CurrencyConverter extends stdClass
                 $convertedBGN = (self::convertToNum(str_replace("chf", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["CHF"]);
                 $converted = ($convertedBGN / $_SESSION["Rates"]["GBP"]);
                 $str = str_replace($value, self::formatNumGBP($converted), $str);
+            }
+        }
+
+        return $str;
+    }
+    // convert currency to CHF f
+    private static function CHFmatch($str = "")
+    {
+
+        // convert from BGN
+
+        preg_match_all("/(?<bgn>[^ ]+лв)/", $str, $amount_array);
+        if ($amount_array['bgn']) {
+            foreach ($amount_array['bgn'] as $value) {
+                $converted = (self::convertToNum(str_replace("лв", "", $value), '.') / $_SESSION["Rates"]["CHF"]);
+                $str = str_replace($value, self::formatNumCHF($converted), $str);
+            }
+        }
+
+        preg_match_all("/(?<bgn>[^ ]+ [BGN]{3})/i", $str, $amount_array);
+        if ($amount_array['bgn']) {
+            foreach ($amount_array['bgn'] as $value) {
+                $converted = (self::convertToNum(str_replace("bgn", "", mb_strtolower($value)), '.') / $_SESSION["Rates"]["CHF"]);
+                $str = str_replace($value, self::formatNumCHF($converted), $str);
+            }
+        }
+
+        // convert form USD
+
+        preg_match_all("/(?<usd>\\$[^ ]+)/u", $str, $amount_array);
+        if ($amount_array['usd']) {
+            foreach ($amount_array['usd'] as $value) {
+                // convert to bgn and then to usd
+                $convertedBGN = (self::convertToNum(str_replace("$", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["USD"]);
+                $converted = ($convertedBGN / $_SESSION["Rates"]["CHF"]);
+                $str = str_replace($value, self::formatNumCHF($converted), $str);
+            }
+        }
+
+        preg_match_all("/(?<usd>[^ ]+ [USD]{3})/i", $str, $amount_array);
+        if ($amount_array['usd']) {
+            foreach ($amount_array['usd'] as $value) {
+                // convert to bgn and then to usd
+                $convertedBGN = (self::convertToNum(str_replace("usd", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["USD"]);
+                $converted = ($convertedBGN / $_SESSION["Rates"]["CHF"]);
+                $str = str_replace($value, self::formatNumCHF($converted), $str);
+            }
+        }
+
+        // convert form GBP
+
+        preg_match_all("/(?<gbp>\\£[^ ]+)/u", $str, $amount_array);
+        if ($amount_array['gbp']) {
+            foreach ($amount_array['gbp'] as $value) {
+                // convert to bgn and then to usd
+                $convertedBGN = (self::convertToNum(str_replace("f", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["GBP"]);
+                $converted = ($convertedBGN / $_SESSION["Rates"]["CHF"]);
+                $str = str_replace($value, self::formatNumCHF($converted), $str);
+            }
+        }
+
+        preg_match_all("/(?<gbp>[^ ]+ [GBP]{3})/i", $str, $amount_array);
+        if ($amount_array['gbp']) {
+            foreach ($amount_array['gbp'] as $value) {
+                // convert to bgn and then to usd
+                $convertedBGN = (self::convertToNum(str_replace("gbp", "", mb_strtolower($value)), '.') * $_SESSION["Rates"]["GBP"]);
+                $converted = ($convertedBGN / $_SESSION["Rates"]["CHF"]);
+                $str = str_replace($value, self::formatNumCHF($converted), $str);
             }
         }
 
