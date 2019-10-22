@@ -33,7 +33,7 @@ preg_match_all("/(?<bgn>[^ ]+лв)/", $str, $amount_array);
   * 100 USD
 * GBP (£)
   * £100
-  * 100 USD
+  * 100 GBP
 * CHF (Fr)
   * 100Fr
   * 100 CHF
