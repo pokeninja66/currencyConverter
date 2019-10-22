@@ -46,7 +46,7 @@ echo "</pre>";
             <div class="column">
                 <h4>Hello there</h4>
                 <p>
-                    Some random example here...<br /> 11 Apr 2016 10,000.00 USD $15.00 11 May 2016 15.00$ and some more random text .... <br />
+                    Some random example here...<br /> 11 Apr 2016 10,000.00 USD $15.00 11 May 2016 15.00$ and some more random text <br />
                     £10 lets convert some more 20£ and finally 100 GBP .<br />
                     Ending it with  the swiss 10f and some 13 CHF 20-Oct-19
                 </p>
