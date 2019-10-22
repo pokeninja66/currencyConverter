@@ -26,8 +26,8 @@ preg_match_all("/(?<bgn>[^ ]+лв)/", $str, $amount_array);
 ## Accepted formats for currencies:
 
 * BGN
- * 100лв
- * 100 BGN
+  * 100лв
+  * 100 BGN
 * USD ($)
   * $100
   * 100 USD
